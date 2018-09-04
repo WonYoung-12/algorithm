@@ -22,7 +22,8 @@ public class Day3_Problem2 {
 	}
 
 	public static void calculateDepth(int[][] tree) {
-		Arrays.fill(depth, -1);
+		// 노드가 10000이면 -1로 depth를 초기화 할때 문제가 될 수 있음.
+		Arrays.fill(depth, -100000);
 		for (int row = 0; row < tree.length; row++) {
 			if (depth[tree[row][0]] == -100000) {
 				if (depth[tree[row][1]] != -100000) {
