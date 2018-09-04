@@ -1,7 +1,9 @@
 import java.util.Arrays;
+import java.util.Scanner;
 import java.util.Stack;
 
-public class Day3_Problem2 {
+public class Problem3584 {
+	static int T;
 	static int N;
 	static int x;
 	static int y;
@@ -10,40 +12,51 @@ public class Day3_Problem2 {
 	static int answer;
 
 	public static void main(String[] args) {
-		int[][] tree = { { 2, 3 }, { 3, 4 }, { 3, 1 }, { 1, 5 } };
-		N = tree.length + 1;
-		depth = new int[N + 1];
-		x = 3;
-		y = 5;
-		calculateDepth(tree);
-		setDepth(tree);
-		searchAnswer(tree);
-		System.out.println(answer);
-	}
+		Scanner scanner = new Scanner(System.in);
+		T = scanner.nextInt();
+		for (int t = 0; t < T; t++) {
+			N = scanner.nextInt();
+			tree = new int[N - 1][2];
+			depth = new int[N+1];
+			for (int i = 0; i < N - 1; i++) {
+				tree[i][0] = scanner.nextInt();
+				tree[i][1] = scanner.nextInt();
+			}
+			x = scanner.nextInt();
+			y = scanner.nextInt();
 
-	public static void calculateDepth(int[][] tree) {
+			calculateDepth();
+			setDepth();
+			searchAnswer();
+			System.out.println(answer);
+		}
+
+		scanner.close();
+	}
+	
+	public static void calculateDepth() {
 		Arrays.fill(depth, -1);
 		for (int row = 0; row < tree.length; row++) {
-			if (depth[tree[row][0]] == -100000) {
-				if (depth[tree[row][1]] != -100000) {
+			if (depth[tree[row][0]] == -1) {
+				if (depth[tree[row][1]] != -1) {
 					depth[tree[row][0]] = depth[tree[row][1]] - 1;
 				} else {
 					depth[tree[row][0]] = 0;
 					depth[tree[row][1]] = 1;
 				}
 			} else {
-				if (depth[tree[row][1]] == -100000) {
+				if (depth[tree[row][1]] == -1) {
 					depth[tree[row][1]] = depth[tree[row][0]] + 1;
 				} else {
 					if (depth[tree[row][0]] + 1 > depth[tree[row][1]]) {
 						depth[tree[row][1]] = depth[tree[row][0]] + 1;
-						for (int edge = 0; edge < N - 1; edge++) {
-							if (tree[edge][0] == tree[row][1]) {
+						for(int edge = 0; edge<N-1; edge++) {
+							if(tree[edge][0] == tree[row][1]) {
 								depth[tree[edge][1]] = depth[tree[edge][0]] + 1;
-
+								
 								boolean isFirst = true;
 								Stack<Integer> stack = new Stack<Integer>();
-								int[] visited = new int[N + 1];
+								int[] visited = new int[N+1];
 								Arrays.fill(visited, 0);
 								stack.push(tree[edge][1]);
 								while (!stack.isEmpty()) {
@@ -51,7 +64,7 @@ public class Day3_Problem2 {
 									int parent = stack.pop();
 									visited[parent] = 1;
 
-									for (int tEdge = 0; tEdge < N - 1; tEdge++) {
+									for (int tEdge = 0; tEdge < N-1; tEdge++) {
 										if (tree[tEdge][0] == parent && visited[tree[tEdge][1]] == 0) {
 											int child = tree[tEdge][1];
 											visited[child] = 1;
@@ -72,11 +85,11 @@ public class Day3_Problem2 {
 		}
 	}
 
-	public static void setDepth(int[][] tree) {
+	public static void setDepth() {
 		if (depth[x] > depth[y]) {
 			while (true) {
-				for (int edge = 0; edge < N - 1; edge++) {
-					if (tree[edge][1] == x) {
+				for(int edge = 0; edge < N-1; edge++) {
+					if(tree[edge][1] == x) {
 						x = tree[edge][0];
 						break;
 					}
@@ -87,8 +100,8 @@ public class Day3_Problem2 {
 			}
 		} else if (depth[y] > depth[x]) {
 			while (true) {
-				for (int edge = 0; edge < N - 1; edge++) {
-					if (tree[edge][1] == y) {
+				for(int edge = 0; edge < N-1; edge++) {
+					if(tree[edge][1] == y) {
 						y = tree[edge][0];
 						break;
 					}
@@ -101,26 +114,26 @@ public class Day3_Problem2 {
 			return;
 	}
 
-	public static void searchAnswer(int[][] tree) {
+	public static void searchAnswer() {
 		if (x == y) {
 			answer = x;
 			return;
 		}
 
-		for (int edge = 0; edge < N - 1; edge++) {
+		for (int edge = 0; edge < N-1; edge++) {
 			if (tree[edge][1] == x) {
 				x = tree[edge][0];
 				break;
 			}
 		}
 
-		for (int edge = 0; edge < N - 1; edge++) {
+		for (int edge = 0; edge < N-1; edge++) {
 			if (tree[edge][1] == y) {
 				y = tree[edge][0];
 				break;
 			}
 		}
 
-		searchAnswer(tree);
+		searchAnswer();
 	}
 }
